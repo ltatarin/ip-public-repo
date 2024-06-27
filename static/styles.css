@@ -140,3 +140,8 @@ table.table td i {
     margin-top: 6px;
     font-size: 95%;
 }
+
+.username {
+    display: block;
+    padding: .5rem;
+}
