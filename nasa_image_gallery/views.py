@@ -10,7 +10,7 @@ from django.contrib import messages
 
 # función que invoca al template del índice de la aplicación.
 def index_page(request):
-    return render(request, 'index.html')
+    return render(request, 'index.html', {'current_page': 'index'})
 
 # auxiliar: retorna 2 listados -> uno de las imágenes de la API y otro de los favoritos del usuario.
 def getAllImagesAndFavouriteList(request, input=None):
@@ -25,7 +25,7 @@ def home(request):
     # (*) este último, solo si se desarrolló el opcional de favoritos; caso contrario, será un listado vacío [].
     images, favourite_list = getAllImagesAndFavouriteList(request)
 
-    return render(request, 'home.html', {'images': images, 'favourite_list': favourite_list} )
+    return render(request, 'home.html', {'images': images, 'favourite_list': favourite_list, 'current_page': 'home'} )
 
 # función utilizada en el buscador.
 def search(request):
@@ -69,7 +69,7 @@ def register(request):
             login(request, user)
             return redirect('home')
             
-    return render(request, 'registration/register.html')
+    return render(request, 'registration/register.html', {'current_page': 'register'})
     
 # las siguientes funciones se utilizan para implementar la sección de favoritos: traer los favoritos de un usuario, guardarlos, eliminarlos y desloguearse de la app.
 @login_required
