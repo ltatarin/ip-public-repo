@@ -12,8 +12,8 @@ def index_page(request):
     return render(request, 'index.html')
 
 # auxiliar: retorna 2 listados -> uno de las imágenes de la API y otro de los favoritos del usuario.
-def getAllImagesAndFavouriteList(request):
-    images = services_nasa_image_gallery.getAllImages()
+def getAllImagesAndFavouriteList(request, input=None):
+    images = services_nasa_image_gallery.getAllImages(input)
     favourite_list = services_nasa_image_gallery.getAllFavouritesByUser(request)
 
     return images, favourite_list
@@ -28,11 +28,14 @@ def home(request):
 
 # función utilizada en el buscador.
 def search(request):
-    images, favourite_list = getAllImagesAndFavouriteList(request)
+    # si el usuario no ingresó texto alguno, debe refrescar la página; caso contrario, debe filtrar aquellas imágenes que posean el texto de búsqueda.
     search_msg = request.POST.get('query', '')
 
-    # si el usuario no ingresó texto alguno, debe refrescar la página; caso contrario, debe filtrar aquellas imágenes que posean el texto de búsqueda.
-    pass
+    if search_msg != '':
+        images, favourite_list = getAllImagesAndFavouriteList(request, search_msg)
+        return render(request, 'home.html', {'images': images, 'favourite_list': favourite_list, 'search_msg': search_msg} )
+    else:
+        return redirect('home')
 
 def login_page(request):
     if request.method == 'POST':
