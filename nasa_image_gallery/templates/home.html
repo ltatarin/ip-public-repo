@@ -15,7 +15,8 @@
         {% for imagen in images %}
         <div class="col">
             <div class="card">
-                <img src="{{ imagen.image_url}}" class="card-img-top" alt="imagen">
+                <div class="container-card-img" style="background-image: url('{{ imagen.image_url}}')">
+                </div>                
                 <div class="card-body">
                     <h5 class="card-title">{{ imagen.title}}</h5>
                     <p class="card-text">{{ imagen.description}}</p>
