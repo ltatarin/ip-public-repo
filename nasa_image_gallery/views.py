@@ -4,6 +4,7 @@
 from django.shortcuts import redirect, render
 from .layers.services import services_nasa_image_gallery
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 
@@ -50,7 +51,25 @@ def login_page(request):
 
     return render(request, 'registration/login.html', {'current_page': 'login'})
 
+def register(request):
+    if request.medo == "POST":
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        username = request.POST["username"]
+        email = request.POST["email"]
+        password = request.POST["password"]
 
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Usuario en uso")
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, "Email en uso")
+        else:
+            user = user.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
+            user.save()
+            login(request,user)
+            return redirect("home")
+        
+    return render(request, "registration/register.html")
 # las siguientes funciones se utilizan para implementar la sección de favoritos: traer los favoritos de un usuario, guardarlos, eliminarlos y desloguearse de la app.
 @login_required
 def getAllFavouritesByUser(request):
