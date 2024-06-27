@@ -145,3 +145,7 @@ table.table td i {
     display: block;
     padding: .5rem;
 }
+
+.nav-link.active {
+    font-weight: bold;
+}
