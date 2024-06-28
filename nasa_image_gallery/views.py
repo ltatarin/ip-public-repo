@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from .mandarmail import MandarMail
 
 # función que invoca al template del índice de la aplicación.
 def index_page(request):
@@ -77,6 +78,7 @@ def register(request):
             user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
             user.save()
             login(request, user)
+            MandarMail(email)
             return redirect('home')
             
     return render(request, 'registration/register.html', {'current_page': 'register'})
