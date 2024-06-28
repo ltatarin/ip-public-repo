@@ -5,12 +5,12 @@ def MandarMail(emailrecibido):
     password = "kzph fpqi uixv xgal"
     email_sender = "maildepruebaip653@gmail.com"
     email_reciver = emailrecibido
-    subjetc = "verificación de cuenta"
-    body = "Usted a creado una cuenta para la galería de la nasa"
+    subject = "Verificación de cuenta"
+    body = "Usted ha creado una cuenta para la galería de la nasa"
     em = EmailMessage()
     em["From"] = email_sender
     em["To"] = email_reciver
-    em["Subject"] = subjetc
+    em["Subject"] = subject
     em.set_content(body)
 
     context = ssl.create_default_context()
