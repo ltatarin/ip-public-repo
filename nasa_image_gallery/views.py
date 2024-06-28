@@ -13,8 +13,8 @@ def index_page(request):
     return render(request, 'index.html', {'current_page': 'index'})
 
 # auxiliar: retorna 2 listados -> uno de las imágenes de la API y otro de los favoritos del usuario.
-def getAllImagesAndFavouriteList(request, input=None):
-    images = services_nasa_image_gallery.getAllImages(input)
+def getAllImagesAndFavouriteList(request, page, limit, input=None):
+    images = services_nasa_image_gallery.getPaginatedImages(page, limit, input)
     favourite_list = services_nasa_image_gallery.getAllFavouritesByUser(request)
 
     return images, favourite_list
@@ -23,18 +23,28 @@ def getAllImagesAndFavouriteList(request, input=None):
 def home(request):
     # llama a la función auxiliar getAllImagesAndFavouriteList() y obtiene 2 listados: uno de las imágenes de la API y otro de favoritos por usuario*.
     # (*) este último, solo si se desarrolló el opcional de favoritos; caso contrario, será un listado vacío [].
-    images, favourite_list = getAllImagesAndFavouriteList(request)
+    page = request.GET.get('page', '')
+    limit = request.GET.get('limit', '')
 
-    return render(request, 'home.html', {'images': images, 'favourite_list': favourite_list, 'current_page': 'home'} )
+    if (page and limit):
+        images, favourite_list = getAllImagesAndFavouriteList(request, page, limit)
+        return render(request, 'page.html', {'images': images, 'favourite_list': favourite_list})
+    else:  
+        return render(request, 'home.html', {'current_page': 'home'} )
 
 # función utilizada en el buscador.
 def search(request):
     # si el usuario no ingresó texto alguno, debe refrescar la página; caso contrario, debe filtrar aquellas imágenes que posean el texto de búsqueda.
+    page = request.GET.get('page', '')
+    limit = request.GET.get('limit', '')
     search_msg = request.POST.get('query', '')
 
     if search_msg != '':
-        images, favourite_list = getAllImagesAndFavouriteList(request, search_msg)
-        return render(request, 'home.html', {'images': images, 'favourite_list': favourite_list, 'search_msg': search_msg} )
+        if (page and limit):
+            images, favourite_list = getAllImagesAndFavouriteList(request, page, limit, search_msg)
+            return render(request, 'page.html', {'images': images, 'favourite_list': favourite_list} )
+        else:  
+            return render(request, 'home.html', {'current_page': 'home', 'search_msg': search_msg} )
     else:
         return redirect('home')
 

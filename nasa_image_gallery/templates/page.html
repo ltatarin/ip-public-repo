@@ -1,0 +1,28 @@
+{% for imagen in images %}
+<div class="col">
+    <div class="card">
+        <div class="container-card-img" style="background-image: url('{{ imagen.image_url}}')">
+        </div>                
+        <div class="card-body">
+            <h5 class="card-title">{{ imagen.title}}</h5>
+            <p class="card-text">{{ imagen.description}}</p>
+        </div>
+        {% if request.user.is_authenticated %}
+        <div class="card-footer text-center">
+            <form method="post" action="{% url 'agregar-favorito' %}">
+                {% csrf_token %}
+                <input type="hidden" name="title" value="{{ imagen.title }}">
+                <input type="hidden" name="description" value="{{ imagen.description }}">
+                <input type="hidden" name="comment" class="comment">
+                <input type="hidden" name="image_url" value="{{ imagen.image_url }}">
+                <input type="hidden" name="date" value="{{ imagen.date }}"> 
+                <button type="submit" class="btn btn-primary btn-sm float-left isFavourite" style="color:white; display: {% if imagen in favourite_list %}inline-block{% else %}none{% endif %}" disabled>✔️ Ya está añadida a favoritos</button>
+                {% if imagen not in favourite_list %}
+                    <button type="button" class="btn btn-primary btn-sm float-left saveFavourite" style="color:white">❤️ Añadir a favoritos</button>
+                {% endif %}
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
