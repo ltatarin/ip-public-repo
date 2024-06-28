@@ -17,10 +17,19 @@ def getAllImages(input=None):
 
     return images
 
+def getPaginatedImages(page, limit, input=None):
+    json_collection = transport.getAllImages(input)
 
-def getImagesBySearchInputLike(input):
-    return getAllImages(input)
+    page = int(page)
+    limit = int(limit)
+    start = (page-1) * limit
+    end = page * limit
+    images = []
+    for i in range(len(json_collection)):
+        if i >= start and i < end:
+            images.append(mapper.fromRequestIntoNASACard(json_collection[i]))
 
+    return images
 
 # añadir favoritos (usado desde el template 'home.html')
 def saveFavourite(request):
